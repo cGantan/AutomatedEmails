@@ -1,0 +1,43 @@
+/**
+* Sends emails with data from the current spreadsheet.
+*/
+function sendEmails() {
+    var sheet = SpreadsheetApp.getActiveSheet();
+    var startRow = 2; // First row of data to process
+    var numRows = 1; // Number of rows to process
+    // Fetch the range of cells A2:B3
+    var dataRange = sheet.getRange(startRow, 1, numRows, 10);
+    // Fetch values for each row in the Range.
+    var data = dataRange.getValues();
+    for (i in data) {
+        var row = data[i];
+        var email = row[1]; // First person info
+        var name = row[0]
+        var phone1 = row[2];
+        var email2 =row[4]; //second person info
+        var name2=row[3];
+        var phone2 = row[5];
+
+        //email info
+        var subject = row[6];
+        var message1 = row[7];
+        var sender = row[9];
+        var cc = row[8];
+
+        message1=message1.replace("<name>",name);
+        message1=message1.replace("<name>",name);//twice since there are two instances per message
+        message1=message1.replace("<name2>",name2);
+        message1=message1.replace("<name2>",name2);
+        message1=message1.replace("<email>",email);
+        message1=message1.replace("<email2>",email2);
+        message1=message1.replace("<phone1>",phone1);
+        message1=message1.replace("<phone2>",phone2);
+        message1=message1.replace("<sender>",sender);
+
+        for (var counter = 0; counter < 8; counter = counter + 1){
+            message1=message1.replace("<new>","\n");
+        }
+
+        MailApp.sendEmail(email, subject, message1, {cc:email2+","+cc});
+    }
+}
